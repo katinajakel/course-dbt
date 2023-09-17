@@ -1,0 +1,27 @@
+version: 2
+
+sources:
+  - name: postgres
+    schema: public
+    database: raw
+    tables: # this is where we define table metadata (name, description, load timestamps)
+      - name: addresses
+        identifier: addresses
+
+      - name: orders
+        identifier: orders
+
+      - name: products
+        identifier: products
+
+      - name: order_items
+        identifier: order_items
+
+      - name: promos
+        identifier: promos
+
+      - name: users
+        identifiers: users
+        
+      - name: events
+        identifiers: events
