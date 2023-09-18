@@ -1,0 +1,67 @@
+## How many users do we have?
+
+select
+  count(distinct user_id)
+from
+  dbt_katinajakelgmailcom.users
+
+      # count(distinct user_id): 130
+
+## On average, how many orders do we receive per hour?
+
+with orders_by_hour as (
+    select
+      count(distinct order_id)
+      , date_part('hour', created_at) as order_hour
+from
+  dbt_katinajakelgmailcom.stg_postgres__orders
+group by 2)
+
+select
+    avg(order_hour) as avg_order_per_hour
+from
+    orders_by_hour
+
+    #11.5 orders per hour
+
+## On average, how long does an order take from being placed to being delivered?
+
+with date_difference as(
+   select
+    order_id
+    , DATEDIFF('day', created_at::timestamp, delivered_at::timestamp ) as days_between
+from
+  dbt_katinajakelgmailcom.stg_postgres__orders)
+
+select
+    avg(days_between)
+from
+    date_difference
+
+    # 3.891803 average time (days) between created and delivery date for orders
+
+## How many users have only made one purchase? Two purchases? Three+ purchases?
+
+with order_counts as (select
+    distinct users.user_id as users
+    , count(distinct orders.order_id) as orders
+from
+  dbt_katinajakelgmailcom.stg_postgres__users as users
+left join dbt_katinajakelgmailcom.stg_postgres__orders as orders on orders.user_id = users.user_id
+group by 1)
+
+    select
+        count(distinct order_counts.users)
+    from order_counts
+    where order_counts.orders = 1
+
+    # 25 users have only made one purchase
+    # 28 users have made two purchases
+
+    # 71 users have made 3 or more purcahses
+
+## Note: you should consider a purchase to be a single order. In other words, if a user places one order for 3 products, they are considered to have made 1 purchase.
+
+## On average, how many unique sessions do we have per hour?
+
+My query, altered with the orders placed per hour, yielded the same results, 11.5?
