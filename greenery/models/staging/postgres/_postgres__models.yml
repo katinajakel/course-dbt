@@ -1,0 +1,141 @@
+version: 2
+
+models:
+  - name: stg_postgres__addresses
+    description: "Delivery address for shipping"
+    columns:
+      - name: address_id
+        description: "Primary key of the `addresses` table."
+        tests:
+          - unique
+          - not_null
+      - name: address
+        description: "Address of the shipment."
+      - name: zipcode
+        description: "Zip code of the shipment."
+      - name: state
+        description: "State of the shipment."
+      - name: country
+        description: "Country of the shipment."
+
+  - name: stg_postgres__events
+    description: "Actions taken by a user on the platform."
+    columns:
+      - name: event_id
+        description: "Primary key of the `events` table."
+        tests:
+          - unique
+          - not_null
+      - name: session_id
+        description: "ID of the session associated with the event."
+      - name: user_id
+        description: "Foreign key to the `users` table."
+      - name: event_type
+        description: "The type of event that occured on the platform."
+      - name: page_url
+        description: "The url where the event occurred."
+      - name: created_at
+        description: "The time at which the event occurred."
+      - name: order_id
+        description: "Foreign key to the `orders` table."
+      - name: product_id
+        description: "Foreign key to the `products` table."
+
+  - name: stg_postgres__order_items
+    description: ""
+    columns:
+      - name: order_id
+        description: "Primary key of the `order_items` table."
+        tests:
+          - unique
+          - not_null
+      - name: product_id
+        description: "Foreign key to the `products` table."
+      - name: quantity
+        description: "The quantity of the product ordered."
+
+  - name: stg_postgres__orders
+    description: "Orders recieved."
+    columns:
+      - name: order_id
+        description: "Primary key of the `orders` table."
+        tests:
+          - unique
+          - not_nul
+      - name: promo_id
+        description: "Foreign key to the `promos` table."
+      - name: user_id
+        description: "Foreign key to the `users` table."
+      - name: address_id
+        description: "Foreign key to the `addresses` table"
+      - name: created_at
+        description: "The time the order was created."
+      - name: order_cost
+        description: "Cost of the item(s) ordered."
+      - name: shipping_cost
+        description: "Cost to ship the item(s) ordered."
+      - name: order_total
+        description: "Total cost of both the item(s) ordered and the cost of shipping."
+      - name: tracking_id
+        description: "Tracking ID used to track the status of delivery."
+      - name: shipping_service
+        description: "The carrier the shipment is being handled by."
+      - name: estimated_delivery_at
+        description: "The estimated date the shipment will arrive to its final address."
+      - name: delivered_at
+        description: "The time at which the shipment was delivered to the final address."
+      - name: status
+        description: "The status of the shipment."
+
+  - name: stg_postgres__products
+    description: "The product(s) being sold."
+    columns:
+      - name: product_id
+        description: "Primary key of the `products` table."
+        tests:
+          - unique
+          - not_null
+      - name: name
+        description: "The name of the product."
+      - name: price
+        description: "The price of a single unit of the product."
+      - name: inventory
+        description: "The number of units in stock of the product."
+
+  - name: stg_postgres__promos
+    description: "The promotions applied to orders."
+    columns:
+      - name: promo_id
+        description: "Primary key of the `promos` table."
+        tests:
+          - unique
+          - not_null
+      - name: promo_id
+        description: "Primary key to the `promos` table."
+      - name: discount
+        description: "The amount of discount that can be applied to an order. (Unclear whether this is a PCT off promo or dollars off)."
+      - name: status
+        description: "Boolean indicator of a promotion's status, options include: 'active', 'inactive'."
+
+  - name: stg_postgres__users
+    description: "Users on the platform."
+    columns:
+      - name: user_id
+        description: "Primary key of the `users` table."
+        tests:
+          - unique
+          - not_null
+      - name: first_name
+        description: "First name of the user."
+      - name: last_name
+        description: "Last name of the user."
+      - name: email
+        description: "Email address of the user."
+      - name: phone_number
+        description: "Ten digit phone number of the user."
+      - name: created_at
+        description: "Time at which the user was created on the platform."
+      - name: updated_at
+        description: "Time at which the use was last updated on the platform."
+      - name: address_id
+        description: "Foreign key to the `addresses`table."
