@@ -1,0 +1,31 @@
+# What is our user repeat rate?
+
+with all_users as (
+    select
+        user_id
+        , count(distinct order_id) as orders
+    from 
+        dbt_katinajakelgmailcom.stg_postgres__orders
+    group by 1),
+
+purchasing_users as (
+    select
+        count(distinct case when orders >= 2 then user_id end) as returning_users
+        , count(distinct case when orders >= 1 then user_id end) as total_users
+    from 
+        all_users)
+
+    select
+        returning_users/total_users
+    from purchasing_users
+
+# The repeat rate of users is 79%
+
+# What are good indicators of a user who will likely purchase again? 
+# What about indicators of users who are likely NOT to purchase again? 
+# If you had more data, what features would you want to look into to answer this question?
+
+# If I had more data, I would want to look at user satisfaction. If their satisfaction is high, we can assume
+# they will want to purchase again. If satisfaction is low, it's unlikely that they will purchase again.
+# Another indicator that a user will likely purchase again is the sessions made to the site after a purchase is made.
+
