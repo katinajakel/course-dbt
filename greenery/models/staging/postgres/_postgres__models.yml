@@ -61,7 +61,7 @@ models:
         description: "Primary key of the `orders` table."
         tests:
           - unique
-          - not_nul
+          - not_null
       - name: promo_id
         description: "Foreign key to the `promos` table."
       - name: user_id
@@ -139,3 +139,37 @@ models:
         description: "Time at which the use was last updated on the platform."
       - name: address_id
         description: "Foreign key to the `addresses`table."
+
+  - name: dim_products.sql
+    description: "A list of products offered and general aggregates on page views and how many times the product has been added to a cart."
+    columns: 
+      - name: product_id
+        description: "Unique ID for a product."
+        tests:
+          - unique
+          - not_null
+      - name: name
+        description: "Name of an offered product."
+      - name: price
+        description: "Price of a product."
+        tests:
+          - not_null
+          - positive_values
+      # Adding not null and positive values because we want to ensure all products have a price and nothing is free.
+      # We also do not want to accidentally pay or subtract an order total with a negative price
+      - name: inventory
+        description: "How much stock is available of a product."
+        tests:
+          - positive_values
+      # Added positive values test because it is impossible to have negative product available
+      - name: total_views
+        description: "How many times a certain product has been viewed."
+        tests:
+          - positive_values
+      # Products should not have negative views
+      - name: count_added_to_cart
+        description: "How many times a certain product has been added to a cart."
+        tests: 
+          - positive_values
+      # Products should not have been added to carts negative times
+      
