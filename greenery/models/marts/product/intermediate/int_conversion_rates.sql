@@ -30,6 +30,7 @@ select
     , product_orders.inventory
     , product_orders.price
     , count(distinct session_id) as num_unique_sessions
+    , (product_checkout)/(num_unique_sessions) as overall_conversion_rate
 from
     {{ ref('stg_postgres__events') }} as events
     left join {{ ref('fact_product_events') }} as product_traffic on product_traffic.product_id = events.product_id
