@@ -29,6 +29,7 @@ select
     , sum(case when events.event_type = 'page_view' then 1 else 0 end) as product_page_views
     , sum(case when events.event_type = 'add_to_cart' then 1 else 0 end) as product_add_to_cart
     , count(distinct order_items.order_id) as product_checkout
+    {{ event_type('stg_postgres__events', 'event_type') }}
 from products
 left join events on events.product_id = products.product_id
 left join order_items on order_items.product_id = products.product_id
