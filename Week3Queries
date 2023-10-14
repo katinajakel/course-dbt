@@ -1,0 +1,57 @@
+# What is our overall conversion rate?
+
+select 
+    count(distinct (case when event_type = 'checkout' then session_id end )) as num_unique_sessions_with_purchase 
+    , count(distinct session_id) as num_unique_sessions
+    , num_unique_sessions_with_purchase / num_unique_sessions * 100 as overall_conversion_rate 
+from DEV_DB.DBT_KATINAJAKELGMAILCOM.STG_POSTGRES__EVENTS 
+
+# 62.46% is the overall converstion rate
+
+# What is our conversion rate by product?
+
+select
+    product_events.name
+    , product_events.product_id
+    , product_events.product_checkout
+    , count(distinct session_id) as num_unique_sessions
+    , (product_checkout)/(num_unique_sessions) as overall_conversion_rate
+from
+    DEV_DB.DBT_KATINAJAKELGMAILCOM.STG_POSTGRES__EVENTS as events
+    left join DEV_DB.DBT_KATINAJAKELGMAILCOM.FACT_PRODUCT_EVENTS as product_events on product_events.product_id = events.product_id
+    left join DEV_DB.DBT_KATINAJAKELGMAILCOM.FACT_ORDERS as product_orders on product_orders.name = product_events.name
+where product_events.product_id is not null
+group by 1, 2, 3
+order by 1 asc
+
+# NAME	OVERALL_CONVERSION_RATE
+# Alocasia Polly	41%
+# Aloe Vera	50%
+# Angel Wings Begonia	40%
+# Arrow Head	56%
+# Bamboo	54%
+# Bird of Paradise	45%
+# Birds Nest Fern	42%
+# Boston Fern	41%
+# Cactus	55%
+# Calathea Makoyana	51%
+# Devil's Ivy	49%
+# Dragon Tree	47%
+# Ficus	43%
+# Fiddle Leaf Fig	50%
+# Jade Plant	48%
+# Majesty Palm	49%
+# Money Tree	46%
+# Monstera	51%
+# Orchid	45%
+# Peace Lily	41%
+# Philodendron	48%
+# Pilea Peperomioides	47%
+# Pink Anthurium	42%
+# Ponytail Palm	40%
+# Pothos	34%
+# Rubber Plant	52%
+# Snake Plant	40%
+# Spider Plant	47%
+# String of pearls	61%
+# ZZ Plant	54%

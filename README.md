@@ -6,3 +6,5 @@ Template repository for the projects and environment of the course: Analytics en
 
 ## License
 GPL-3.0
+
+Week 3 Answers: 
